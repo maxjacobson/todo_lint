@@ -3,8 +3,8 @@ require "rspec/core/rake_task"
 require "rubocop/rake_task"
 require "yardstick/rake/verify"
 
-RSpec::Core::RakeTask.new(:spec)
-RuboCop::RakeTask.new(:style)
+RSpec::Core::RakeTask.new(:function)
+RuboCop::RakeTask.new(:form)
 Yardstick::Rake::Verify.new(:clarity)
 
-task :default => [:spec, :style, :clarity]
+task :default => [:function, :form, :clarity]
