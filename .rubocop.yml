@@ -5,3 +5,6 @@ Style/StringLiterals:
 
 Style/SignalException:
   EnforcedStyle: only_raise
+
+Style/HashSyntax:
+  EnforcedStyle: hash_rockets

@@ -14,12 +14,6 @@ Metrics/LineLength:
 Style/Documentation:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: SupportedStyles, UseHashRocketsWithSymbolValues.
-Style/HashSyntax:
-  EnforcedStyle: hash_rockets
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
