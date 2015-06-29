@@ -20,7 +20,7 @@ module TodoLint
     def report
       return unless problematic?
 
-      "#{problem_location} #{problem}\n" \
+      "#{todo_location} #{problem}\n" \
       "#{todo.line}\n" \
       "#{spaces}#{carets}"
     end
@@ -44,7 +44,10 @@ module TodoLint
       !todo.annotated?
     end
 
-    def problem_location
+    # Which file, line, and character can the todo be found at?
+    # @return [String]
+    # @api private
+    def todo_location
       Rainbow(path).green + ":#{todo.line_number}:#{todo.character_number}"
     end
 
