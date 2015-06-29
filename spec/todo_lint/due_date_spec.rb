@@ -1,6 +1,6 @@
 require "spec_helper"
 
-module TodoLint
+module TodoLint #:nodoc:
   describe DueDate do
     describe "::from_annotation and #to_date" do
       it "parses dates from annotations" do
@@ -11,7 +11,8 @@ module TodoLint
       it "complains on invalid input" do
         expect do
           DueDate.from_annotation("omg")
-        end.to raise_error(ArgumentError, 'not a properly formatted annotation: "omg"')
+        end.to raise_error(
+          ArgumentError, 'not a properly formatted annotation: "omg"')
       end
     end
   end

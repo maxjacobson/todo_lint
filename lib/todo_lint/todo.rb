@@ -53,14 +53,30 @@ module TodoLint
       @line_number = line_number
     end
 
+    # Was this todo annotated with a due date?
+    # @example
+    #   annotated_todo.line #=> "# TODO(2013-05-24): learn to fly"
+    #   annotated_todo.annotated? #=> true
+    #
+    #   not_annotated_todo.line #=> "# TODO: read a poem"
+    #   not_annotated_todo.annotated? #=> false"
+    # @return [Boolean]
+    # @api public
     def annotated?
       !match[:due_date].nil?
     end
 
+    # When this todo is due
+    # @example
+    #   due_todo.line #=> "# TODO(2015-05-24): go to the beach"
+    #   due__todo.due_date.to_date #=> #<Date: 2015-05-24>
+    #   not_due_todo.line #=> "# TODO: become a fish"
+    #   not_due_todo.due_date #=> nil
+    # @return [DueDate] if there is a due date
+    # @return [NilClass] if there is no due date
+    # @api public
     def due_date
-      if annotated?
-        DueDate.from_annotation(match[:due_date])
-      end
+      DueDate.from_annotation(match[:due_date]) if annotated?
     end
 
     # The 1-indexed character at which the todo comment is found
@@ -74,6 +90,9 @@ module TodoLint
 
     private
 
+    # Analyze the line to help identify when the todo is due
+    # @return [MatchData]
+    # @api private
     def match
       @match ||= PATTERN.match(line)
     end
