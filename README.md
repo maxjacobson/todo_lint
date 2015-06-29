@@ -4,12 +4,9 @@
 
 [travis]: https://travis-ci.org/maxjacobson/todo_lint
 
-Welcome to your new gem! In this directory, you'll find the files you need to
-be able to package up your Ruby library into a gem. Put your Ruby code in the
-file `lib/todo_lint`. To experiment with that code, run `bin/console` for an
-interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Sometimes TODO comments stagnate over time and you forget about them. It would
+be great if you could snooze them, Mailbox-style, and be reminded about them
+again later.
 
 ## Installation
 
@@ -29,7 +26,28 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Add this to your continuous integration list of commands in your `.travis.yml`
+or `circle.yml`:
+
+    bundle exec todo_lint .rb .coffee .scss
+
+(Put whichever file extensions you want it to check; note the leading dot.)
+
+If you have a bunch of TODO comments in your code, your next build will fail.
+
+Go through your TODO comments, and change from:
+
+```ruby
+# TODO: refactor into multiple classes
+```
+
+to:
+
+```ruby
+# TODO(2043-11-05): refactor into multiple classes
+```
+
+Now your build will pass. Until November, 2043.
 
 ## Development
 
