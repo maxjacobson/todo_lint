@@ -23,7 +23,7 @@ module TodoLint
       reports = files.map do |file|
         Todo.within(File.open(file)).map do |todo|
           reporter = Reporter.new(todo,
-                                  :path => path,
+                                  :path => file,
                                   :judge => Judge.new(todo))
           reporter.report.tap do |report|
             print Rainbow(".").public_send(report.nil? ? :green : :red)
