@@ -69,7 +69,7 @@ module TodoLint
     # When this todo is due
     # @example
     #   due_todo.line #=> "# TODO(2015-05-24): go to the beach"
-    #   due__todo.due_date.to_date #=> #<Date: 2015-05-24>
+    #   due_todo.due_date.to_date #=> #<Date: 2015-05-24>
     #   not_due_todo.line #=> "# TODO: become a fish"
     #   not_due_todo.due_date #=> nil
     # @return [DueDate] if there is a due date
