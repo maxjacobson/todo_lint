@@ -1,3 +1,5 @@
+require "pathname"
+
 module TodoLint
   # Which files are we going to inspect?
   class FileFinder

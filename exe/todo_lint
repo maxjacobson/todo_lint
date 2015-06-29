@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "todo_lint"
+
+TodoLint::Cli.new(ARGV).run!

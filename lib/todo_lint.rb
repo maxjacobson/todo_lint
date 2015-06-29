@@ -6,6 +6,7 @@ require "todo_lint/file_finder"
 require "todo_lint/todo"
 require "todo_lint/reporter"
 require "todo_lint/judge"
+require "todo_lint/cli"
 
 # here we establish the module which will namespace all of the code for this gem
 module TodoLint

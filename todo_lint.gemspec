@@ -9,10 +9,14 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Max Jacobson"]
   spec.email         = ["max@hardscrabble.net"]
 
-  spec.summary       = "TODO: Write a short summary, because Rubygems " \
-                       "requires one."
-  spec.description   = "TODO: Write a longer description or delete this line."
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "Linter to help you remember your todos"
+  spec.description   = "todo_lint can be integrated into a continuous " \
+                       "integration workflow to keep todo comments from " \
+                       "becoming stagnant over time. Just annotate the " \
+                       "comment with a date, and if that date has passed, " \
+                       "your build will fail, and you'll be reminded to " \
+                       "snooze the todo a little later, or finally address it."
+  spec.homepage      = "https://github.com/maxjacobson/todo_lint"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

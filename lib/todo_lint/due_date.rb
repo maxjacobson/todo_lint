@@ -1,3 +1,5 @@
+require "date"
+
 module TodoLint
   # When is this todo actually due? When ought we be reminded of this one?
   class DueDate
