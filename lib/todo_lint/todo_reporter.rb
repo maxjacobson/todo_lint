@@ -20,7 +20,7 @@ module TodoLint
     def report
       return unless problematic?
 
-      "#{path}:#{todo.line_number}:#{todo.character_number} #{problem}\n" \
+      "#{problem_location} #{problem}\n" \
       "#{todo.line}\n" \
       "#{spaces}#{carets}"
     end
@@ -44,11 +44,15 @@ module TodoLint
       !todo.annotated?
     end
 
+    def problem_location
+      Rainbow(path).green + ":#{todo.line_number}:#{todo.character_number}"
+    end
+
     # The reason we are reporting on this todo
     # @return [String]
     # @api private
     def problem
-      "Missing due date annotation"
+      Rainbow("Missing due date annotation").red
     end
 
     # Generate the indentation before the carets
