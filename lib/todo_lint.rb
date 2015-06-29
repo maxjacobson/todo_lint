@@ -1,5 +1,6 @@
 require "required_arg"
 require "todo_lint/version"
+require "todo_lint/due_date"
 require "todo_lint/file_finder"
 require "todo_lint/todo"
 

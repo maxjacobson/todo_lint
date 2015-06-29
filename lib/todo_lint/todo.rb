@@ -2,7 +2,11 @@ module TodoLint
   # Todo represents a todo/fixme/etc comment within your source code
   class Todo
     # The regular expression that identifies todo comments
-    PATTERN = /TODO/
+    PATTERN = /
+    (?<flag> TODO ){0}
+    (?<due_date> \(\d{4}-\d{2}-\d{2}\) ){0}
+    \g<flag>\g<due_date>?
+    /x
 
     # Search a file for all of the todo/fixme/etc comments within it
     # @example
@@ -32,7 +36,7 @@ module TodoLint
     # @return [String]
     attr_reader :line
 
-    # On which line of the file was the todo discovered?
+    # The 1-indexed line on which the todo was discovered
     # @example
     #   todo.line_number #=> 4
     # @api public
@@ -49,9 +53,15 @@ module TodoLint
       @line_number = line_number
     end
 
-    # def annotated?
-    #   true
-    # end
+    def annotated?
+      !match[:due_date].nil?
+    end
+
+    def due_date
+      if annotated?
+        DueDate.from_annotation(match[:due_date])
+      end
+    end
 
     # The 1-indexed character at which the todo comment is found
     # @example
@@ -60,6 +70,12 @@ module TodoLint
     # @api public
     def character_number
       (line =~ PATTERN) + 1
+    end
+
+    private
+
+    def match
+      @match ||= PATTERN.match(line)
     end
 
     # complain that this line isn't even a todo, so nothing will work anyway
