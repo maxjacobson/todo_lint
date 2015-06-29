@@ -1,8 +1,20 @@
-# require "spec_helper"
+require "spec_helper"
 
-# module TodoLint
-#   describe TodoReporter do
-#     it "takes a todo and formats it with nice output so you can resolve it.
-#     It probably uses the rainbow gem to nicely colorize the output"
-#   end
-# end
+module TodoLint #:nodoc:
+  describe TodoReporter do
+    # TODO: figure out the color coding part of it
+    describe "#to_s" do
+      it "reports on a todo" do
+        todo = Todo.new("  # TODO: glimpse infinity", :line_number => 45)
+        reporter = TodoReporter.new(todo,
+                                    :path => "/Users/max/src/layabout/Gemfile")
+
+        expected_report = "/Users/max/src/layabout/Gemfile:45:5 " \
+                          "Missing due date annotation\n" \
+                          "  # TODO: glimpse infinity\n" \
+                          "    ^^^^"
+        expect(reporter.report).to eq expected_report
+      end
+    end
+  end
+end

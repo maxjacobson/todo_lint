@@ -51,12 +51,13 @@ module TodoLint #:nodoc:
       end
     end
 
-    describe "#annotated? and #due_date" do
+    describe "#annotated?, #flag, #due_date" do
       context "when the line is annotated with a due date" do
         it "should return true" do
           todo = Todo.new(
             "# TODO(2015-08-29): solve a crime", :line_number => 500)
           expect(todo).to be_annotated
+          expect(todo.flag).to eq "TODO"
           expect(todo.due_date).to be_a DueDate
           expect(todo.due_date.to_date).to eq Date.new(2015, 8, 29)
         end
@@ -67,6 +68,7 @@ module TodoLint #:nodoc:
           todo = Todo.new("# TODO: solve a crime", :line_number => 5000)
           expect(todo).to_not be_annotated
           expect(todo.due_date).to be_nil
+          expect(todo.flag).to eq "TODO"
         end
       end
     end

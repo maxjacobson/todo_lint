@@ -79,6 +79,15 @@ module TodoLint
       DueDate.from_annotation(match[:due_date]) if annotated?
     end
 
+    # What did the developer write to get our attention?
+    # @example
+    #   todo.flag #=> "TODO"
+    # @return [String]
+    # @api public
+    def flag
+      match[:flag]
+    end
+
     # The 1-indexed character at which the todo comment is found
     # @example
     #   todo.character_number #=> 4
