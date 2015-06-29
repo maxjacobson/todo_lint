@@ -1,24 +1,27 @@
+require "todo_lint/options"
+
 module TodoLint
   # Here we bring together all the pieces and see if it comes together
   # TODO: test this class somehow
   class Cli
     # Startup the thing that actually checks the files for todos!
     # @example
-    #   Cli.new([".rb", ".js"])
+    #   Cli.new(["-x", ".rb,.js"])
     # @api public
-    def initialize(extensions = [])
+    def initialize(args)
+      @options = Options.new.parse(args)
       @path = File.expand_path(".")
-      @extensions = extensions
+      add_default_extensions
     end
 
     # @example
-    #   Cli.new([".rb"]).run!
+    #   Cli.new(["-x", ".rb"]).run!
     # @return exit code 0 for success, 1 for failure
     # @api public
     # rubocop:disable Metrics/AbcSize
     def run! # rubocop:disable Metrics/MethodLength
-      finder = FileFinder.new(File.expand_path("."))
-      files = finder.list(*extensions)
+      finder = FileFinder.new(path, options)
+      files = finder.list(*options[:extensions])
       files_count = files.count
       reports = files.map do |file|
         Todo.within(File.open(file)).map do |todo|
@@ -56,12 +59,25 @@ module TodoLint
     # @api private
     attr_reader :path
 
+    # Options hash for all configurations
+    # @return [Hash]
+    # @api private
+    attr_reader :options
+
     # Pluralize a word based on the count
     # @return [String]
     # @api private
     def pluralize(word, count)
       s = count == 1 ? "" : "s"
       "#{count} #{word + s}"
+    end
+
+    # Set default extensions if none given
+    # @api private
+    # @return [Array<String>]
+    def add_default_extensions
+      return if options[:extensions]
+      options[:extensions] = [".rb"]
     end
   end
 end

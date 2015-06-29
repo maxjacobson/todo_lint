@@ -7,9 +7,11 @@ module TodoLint
     # @example
     #   FileFinder.new("/Users/max/src/layabout")
     # @api public
-    def initialize(path)
+    def initialize(path, options)
       @path = path
+      @options = options
       @all_files = Dir.glob(Pathname.new(path).join("**", "*"))
+      @excluded = options[:excluded_files]
     end
 
     # Absolute paths to all the files with the provided extensions
@@ -21,6 +23,8 @@ module TodoLint
       all_files.keep_if do |filename|
         extensions.include?(Pathname.new(filename).extname)
       end
+      all_files.reject! { |file| excluded_file?(file) }
+      all_files
     end
 
     private
@@ -34,5 +38,20 @@ module TodoLint
     # @return [Array<String>]
     # @api private
     attr_reader :all_files
+
+    # Options hash for all configurations
+    # @return [Hash]
+    # @api private
+    attr_reader :options
+
+    # Check if this file has been excluded
+    # @api private
+    # @return [Boolean]
+    def excluded_file?(file)
+      full_path = File.expand_path(file)
+      options.fetch(:excluded_files, []).any? do |file_to_exclude|
+        File.fnmatch(file_to_exclude, full_path)
+      end
+    end
   end
 end

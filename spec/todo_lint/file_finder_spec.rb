@@ -7,7 +7,7 @@ module TodoLint #:nodoc:
     let(:app_rb) { File.join(fake_project_path, "app.rb") }
     let(:app_spec_rb) { File.join(fake_project_path, "spec", "app_spec.rb") }
     let(:app_coffee) { File.join(fake_project_path, "app.coffee") }
-    let(:finder) { FileFinder.new(fake_project_path) }
+    let(:finder) { FileFinder.new(fake_project_path, {}) }
 
     before do
       expect(File).to be_directory fake_project_path
