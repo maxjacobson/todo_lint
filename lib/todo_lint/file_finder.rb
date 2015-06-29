@@ -1,4 +1,4 @@
-module TodoLint #:nodoc:
+module TodoLint
   # Which files are we going to inspect?
   class FileFinder
     # Instantiate a FileFinder with the path to a folder
