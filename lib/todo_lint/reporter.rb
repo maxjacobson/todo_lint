@@ -1,14 +1,17 @@
 module TodoLint
   # We want to be able to report to users about the todos in their code, and
-  # the TodoReporter is responsible for passing judgment and generating output
-  class TodoReporter
+  # the Reporter is responsible for passing judgment and generating output
+  class Reporter
     # Accept a todo and a path to check for problems
     # @example
-    #   TodoReporter.new(todo, path: "/Users/max/src/required_arg/README.md")
+    #   Reporter.new(todo,
+    #     path: "/Users/max/src/required_arg/README.md",
+    #     judge: Judge.new(todo))
     # @api public
-    def initialize(todo, path: RequiredArg.new(:path))
+    def initialize(todo, path: RequiredArg.new, judge: RequiredArg.new)
       @todo = todo
       @path = path
+      @judge = judge
     end
 
     # Generate the output to show the user about their todo
@@ -18,7 +21,7 @@ module TodoLint
     # @return [NilClass] if the todo is fine
     # @api public
     def report
-      return unless problematic?
+      return if judge.charge.nil?
 
       "#{todo_location} #{problem}\n" \
       "#{todo.line}\n" \
@@ -37,12 +40,10 @@ module TodoLint
     # @api private
     attr_reader :path
 
-    # Whether we need to report on this todo or not
-    # @return [Boolean]
+    # The object responsible for charging the todo with a crime, or not
+    # @return [Judge]
     # @api private
-    def problematic?
-      !todo.annotated?
-    end
+    attr_reader :judge
 
     # Which file, line, and character can the todo be found at?
     # @return [String]
@@ -55,7 +56,7 @@ module TodoLint
     # @return [String]
     # @api private
     def problem
-      Rainbow("Missing due date annotation").red
+      Rainbow(judge.charge).red
     end
 
     # Generate the indentation before the carets

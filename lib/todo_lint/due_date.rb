@@ -32,5 +32,14 @@ module TodoLint
     def initialize(date)
       @to_date = date
     end
+
+    # Is this due date in the past?
+    # @example
+    #   due_date.overdue? #=> true
+    # @return [Boolean]
+    # @api public
+    def overdue?
+      Date.today > to_date
+    end
   end
 end
