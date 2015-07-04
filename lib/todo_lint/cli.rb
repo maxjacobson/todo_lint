@@ -2,26 +2,30 @@ require "todo_lint/options"
 
 module TodoLint
   # Here we bring together all the pieces and see if it comes together
-  # TODO: test this class somehow
   class Cli
     # Startup the thing that actually checks the files for todos!
     # @example
-    #   Cli.new(["-x", ".rb,.js"])
+    #   Cli.new(["-i", ".rb,.js"])
     # @api public
-    def initialize(args)
+    def initialize(args) # rubocop:disable Metrics/AbcSize
       @options = Options.new.parse(args)
+      if @options[:config_file]
+        @options.merge!(ConfigFile.new.read_config_file(@options[:config_file]))
+      elsif File.exist?("./.todo_lint.yml")
+        @options.merge!(ConfigFile.new.read_config_file("./.todo_lint.yml"))
+      end
       @path = File.expand_path(".")
-      add_default_extensions
+      add_default_extensions unless @options.fetch(:files, []).any?
     end
 
     # @example
-    #   Cli.new(["-x", ".rb"]).run!
+    #   Cli.new(["-i", ".rb"]).run!
     # @return exit code 0 for success, 1 for failure
     # @api public
     # rubocop:disable Metrics/AbcSize
     def run! # rubocop:disable Metrics/MethodLength
       finder = FileFinder.new(path, options)
-      files = finder.list(*options[:extensions])
+      files = load_files(finder)
       files_count = files.count
       reports = files.map do |file|
         Todo.within(File.open(file)).map do |todo|
@@ -47,12 +51,19 @@ module TodoLint
       end
     end
 
-    private
-
-    # Which file extensions are we checking?
+    # Loads the files to be read
     # @return [Array<String>]
-    # @api private
-    attr_reader :extensions
+    # @example cli.load_files(file_finder)
+    # @api public
+    def load_files(file_finder)
+      if file_finder.options.fetch(:files).empty?
+        file_finder.list(*options[:extensions])
+      else
+        file_finder.options.fetch(:files, [])
+      end
+    end
+
+    private
 
     # Where are we looking for files?
     # @return [String]

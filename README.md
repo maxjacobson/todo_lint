@@ -29,9 +29,7 @@ Or install it yourself as:
 Add this to your continuous integration list of commands in your `.travis.yml`
 or `circle.yml`:
 
-    bundle exec todo_lint .rb .coffee .scss
-
-(Put whichever file extensions you want it to check; note the leading dot.)
+    bundle exec todo_lint
 
 If you have a bunch of TODO comments in your code, your next build will fail.
 
@@ -48,6 +46,31 @@ to:
 ```
 
 Now your build will pass. Until November, 2043.
+
+## Configuration
+
+Create a .todo_lint.yml file in your main repo
+
+    Exclude Files:
+      - vendor/**
+
+Options include "Include Files:", "Exclude Files:", and "Extensions:"
+
+If no extensions are specified, todo_lint will check all .rb files by default.
+
+If you include files, todo_lint will only read those files.
+
+The config file will exclude/include files starting from the directory where the config file is located
+
+You may also configure your use of todo_lint from the command line:
+
+    $ todo_lint -i .rb,.coffee,.js
+
+Command flag              | Description
+--------------------------|--------------------------------------------
+`-c/--config [FILE]`      | Load the specified config file
+`-e/--exclude [FILES]`    | Exclude the specified files
+`-i/--include [EXTS]`     | Only look at specified extensions
 
 ## Development
 

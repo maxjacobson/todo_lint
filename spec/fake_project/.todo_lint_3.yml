@@ -1,0 +1,7 @@
+Exclude Files:
+  - app.js
+
+Extensions:
+  - .rb
+  - .js
+  - .coffee

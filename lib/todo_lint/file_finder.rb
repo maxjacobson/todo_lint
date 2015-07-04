@@ -27,6 +27,12 @@ module TodoLint
       all_files
     end
 
+    # Options hash for all configurations
+    # @return [Hash]
+    # @example FileFinder.new(path, options).options
+    # @api public
+    attr_reader :options
+
     private
 
     # Which folder to look within for files
@@ -38,11 +44,6 @@ module TodoLint
     # @return [Array<String>]
     # @api private
     attr_reader :all_files
-
-    # Options hash for all configurations
-    # @return [Hash]
-    # @api private
-    attr_reader :options
 
     # Check if this file has been excluded
     # @api private

@@ -13,10 +13,9 @@ module TodoLint
 
       OptionParser.new do |parser|
         parser.banner = "Usage: todo_lint [options] [files]"
-
-        add_file_options parser
-        add_extension_options parser
-        exclude_file_options(parser)
+        add_config_options parser
+        exclude_file_options parser
+        include_extension_options parser
       end.parse!(args)
 
       # Any remaining arguments are assumed to be files
@@ -30,14 +29,15 @@ module TodoLint
     # Adds the file options to the @options hash
     # @api private
     # @return [Hash]
-    def add_file_options(parser)
+    def add_config_options(parser)
       parser.on("-c", "--config config-file", String,
-                "Specify which config file you want to use") do |conf_file|
+                "Specify the path to the config file you want
+                 to use, from the main repo") do |conf_file|
         options[:config_file] = conf_file
       end
     end
 
-    # Adds the excluded file options to the @options hash
+    # Adds the excluded file options to the options hash
     # @api private
     # @return [Hash]
     def exclude_file_options(parser)
@@ -50,35 +50,15 @@ module TodoLint
       end
     end
 
-    # Adds the extension options to the @options hash
-    # @api private
-    # @return [Hash]
-    def add_extension_options(parser)
-      include_extension_options(parser)
-      exclude_extension_options(parser)
-    end
-
     # Adds the include extension options to the @options hash
     # @api private
     # @return [Hash]
     def include_extension_options(parser)
-      parser.on("-x", "--include ext1,...", Array,
+      parser.on("-i", "--include ext1,...", Array,
                 "List of extensions to include") do |ext_list|
         options[:extensions] = ext_list
       end
     end
-
-    # Adds the exclude extension options to the @options hash
-    # @api private
-    # @return [Hash]
-    def exclude_extension_options(parser)
-      parser.on("-n", "--exclude ext1,...", Array,
-                "List of extensions to exclude") do |ext_list|
-        options[:excluded_extensions] = ext_list
-      end
-    end
-
-    private
 
     # Options hash for all configurations
     # @return [Hash]
