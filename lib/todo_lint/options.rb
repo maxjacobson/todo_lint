@@ -16,6 +16,7 @@ module TodoLint
         add_config_options parser
         exclude_file_options parser
         include_extension_options parser
+        report_version parser
       end.parse!(args)
 
       # Any remaining arguments are assumed to be files
@@ -57,6 +58,16 @@ module TodoLint
       parser.on("-i", "--include ext1,...", Array,
                 "List of extensions to include") do |ext_list|
         options[:extensions] = ext_list
+      end
+    end
+
+    # Reports the current version of the gem and that's it!
+    # @api private
+    # @return [Hash]
+    def report_version(parser)
+      parser.on("-v", "--version") do
+        puts VERSION
+        exit
       end
     end
 
