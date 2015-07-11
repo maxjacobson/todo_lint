@@ -38,6 +38,7 @@ module TodoLint
         end
       end.flatten.compact
       if reports.any?
+        puts
         reports.each do |report|
           puts report
         end
