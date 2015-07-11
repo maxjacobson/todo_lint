@@ -2,5 +2,5 @@
 # it's in its own file so it can be required in the gemspec without requiring
 # everything else as well
 module TodoLint
-  VERSION = "0.2.1"
+  VERSION = "0.2.2"
 end
