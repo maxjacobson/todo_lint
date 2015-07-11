@@ -24,7 +24,7 @@ module TodoLint
       return if judge.charge.nil?
 
       "#{todo_location} #{problem}\n" \
-      "#{todo.line}\n" \
+      "#{todo.line.chomp}\n" \
       "#{spaces}#{carets}"
     end
 
