@@ -1,3 +1,5 @@
+require: "rubo_cop/single_responsibility_principle"
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
