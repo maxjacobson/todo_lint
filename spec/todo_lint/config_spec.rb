@@ -12,7 +12,7 @@ module TodoLint #:nodoc:
     let(:app_coffee) { File.join(fake_project_path, "app.coffee") }
     # Specifications: Exclude Files: app_spec.rb
     it "should not look at files excluded in the yaml file" do
-      cli_test = Cli.new(["-c", "#{exclude_file_yaml}"])
+      cli_test = Cli.new(["-c", exclude_file_yaml.to_s])
       options_hash = cli_test.instance_variable_get(:@options)
       path = cli_test.instance_variable_get(:@path)
       file_finder_test = FileFinder.new(path, options_hash)
@@ -25,7 +25,7 @@ module TodoLint #:nodoc:
     end
     # Specifications: Extensions: .js, .coffee
     it "should not look at only extensions specified in the yaml file" do
-      cli_test = Cli.new(["-c", "#{extensions_yaml}"])
+      cli_test = Cli.new(["-c", extensions_yaml.to_s])
       options_hash = cli_test.instance_variable_get(:@options)
       path = cli_test.instance_variable_get(:@path)
       file_finder_test = FileFinder.new(path, options_hash)
@@ -37,7 +37,7 @@ module TodoLint #:nodoc:
     end
     # Specifications: Exclude Files: app.js Extensions: .rb, .js, .coffee
     it "should allow for multiple specifications" do
-      cli_test = Cli.new(["-c", "#{multiple_yaml}"])
+      cli_test = Cli.new(["-c", multiple_yaml.to_s])
       options_hash = cli_test.instance_variable_get(:@options)
       path = cli_test.instance_variable_get(:@path)
       file_finder_test = FileFinder.new(path, options_hash)

@@ -70,7 +70,7 @@ module TodoLint
     # @return [String]
     # @api private
     def carets
-      "^" * (todo.flag.length)
+      "^" * todo.flag.length
     end
   end
 end

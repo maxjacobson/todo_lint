@@ -10,7 +10,7 @@ module TodoLint #:nodoc:
     let(:app_coffee) { File.join(fake_project_path, "app.coffee") }
     let(:todo_lint_rb) { File.join(lib_path, "todo_lint.rb") }
     it "should not look at excluded files, and look at .rb by default" do
-      cli_test = Cli.new(["-e", "#{app_rb}"])
+      cli_test = Cli.new(["-e", app_rb.to_s])
       options_hash = cli_test.instance_variable_get(:@options)
       path = cli_test.instance_variable_get(:@path)
       file_finder_test = FileFinder.new(path, options_hash)
