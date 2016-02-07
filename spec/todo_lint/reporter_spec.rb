@@ -14,8 +14,8 @@ module TodoLint #:nodoc:
 
         expected_report = "/Users/max/src/layabout/Gemfile:45:5 " \
                           "Missing due date annotation\n" \
-                          "  # TODO: glimpse infinity\n" \
-                          "    ^^^^"
+                          "# TODO: glimpse infinity\n" \
+                          "  ^^^^"
         expect(reporter.report).to eq expected_report
       end
 

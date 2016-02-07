@@ -24,7 +24,7 @@ module TodoLint
       return if judge.charge.nil?
 
       "#{todo_location} #{problem}\n" \
-      "#{todo.line.chomp}\n" \
+      "#{todo.line.chomp.lstrip}\n" \
       "#{spaces}#{carets}"
     end
 
@@ -63,7 +63,14 @@ module TodoLint
     # @return [String]
     # @api private
     def spaces
-      " " * (todo.character_number - 1)
+      " " * number_of_spaces
+    end
+
+    # How many spaces before the carets should there be?
+    # @return [Fixnum]
+    # @api private
+    def number_of_spaces
+      todo.character_number - 1 - (todo.line.length - todo.line.lstrip.length)
     end
 
     # Generate the ^^^^ characters to point at the flag
