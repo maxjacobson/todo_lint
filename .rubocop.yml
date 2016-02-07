@@ -1,3 +1,6 @@
+AllCops:
+  DisplayCopNames: true
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
@@ -6,3 +9,12 @@ Style/SignalException:
 
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
+
+Metrics/AbcSize:
+  Exclude:
+    - lib/todo_lint/cli.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - lib/todo_lint/cli.rb
+    - lib/todo_lint/options.rb

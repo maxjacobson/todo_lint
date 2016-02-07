@@ -9,7 +9,7 @@ module TodoLint
     # @param args [Array<String>] arguments passed via the command line
     # @return [Hash] parsed options
     def parse(args)
-      @options = {}
+      @options = { :report => false }
 
       OptionParser.new do |parser|
         parser.banner = "Usage: todo_lint [options] [files]"
@@ -17,6 +17,7 @@ module TodoLint
         exclude_file_options parser
         include_extension_options parser
         report_version parser
+        report_report_options parser
       end.parse!(args)
 
       # Any remaining arguments are assumed to be files
@@ -68,6 +69,15 @@ module TodoLint
       parser.on("-v", "--version") do
         puts VERSION
         exit
+      end
+    end
+
+    # Checks if the user requested a report on the todos in their codebase
+    # @api private
+    # @return [Hash]
+    def report_report_options(parser)
+      parser.on("-r", "--report") do
+        options[:report] = true
       end
     end
 

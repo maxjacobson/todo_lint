@@ -72,5 +72,37 @@ module TodoLint #:nodoc:
         end
       end
     end
+
+    describe "sorting" do
+      context "when all of the todos have due dates" do
+        it "sorts them with newer todos first" do
+          todos = [
+            Todo.new("# TODO(1969-04-04): commit a crime", :line_number => 4),
+            Todo.new("# TODO(1955-08-02): plan a crime", :line_number => 3)
+          ]
+
+          expect(todos.sort.map(&:task)).to eq [
+            "plan a crime",
+            "commit a crime"
+          ]
+        end
+      end
+
+      context "when some of the todos don't have due dates" do
+        it "sorts the unannotated ones to the front" do
+          todos = [
+            Todo.new("# TODO(1969-04-04): commit a crime", :line_number => 4),
+            Todo.new("# TODO: buy some spray paint", :line_number => 1),
+            Todo.new("# TODO(1955-08-02): plan a crime", :line_number => 3)
+          ]
+
+          expect(todos.sort.map(&:task)).to eq [
+            "buy some spray paint",
+            "plan a crime",
+            "commit a crime"
+          ]
+        end
+      end
+    end
   end
 end

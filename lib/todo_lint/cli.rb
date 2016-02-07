@@ -7,7 +7,7 @@ module TodoLint
     # @example
     #   Cli.new(["-i", ".rb,.js"])
     # @api public
-    def initialize(args) # rubocop:disable Metrics/AbcSize
+    def initialize(args) # rubocop:disable
       @options = Options.new.parse(args)
       if @options[:config_file]
         @options.merge!(ConfigFile.new.read_config_file(@options[:config_file]))
@@ -18,12 +18,48 @@ module TodoLint
       add_default_extensions unless @options.fetch(:files, []).any?
     end
 
+    # Perform the actions requested based on the options specified
+    #
     # @example
     #   Cli.new(["-i", ".rb"]).run!
     # @return exit code 0 for success, 1 for failure
     # @api public
-    # rubocop:disable Metrics/AbcSize
-    def run! # rubocop:disable Metrics/MethodLength
+    def run!
+      if options[:report]
+        print_report
+      else
+        lint_codebase
+      end
+    end
+
+    # Loads the files to be read
+    # @return [Array<String>]
+    # @example cli.load_files(file_finder)
+    # @api public
+    def load_files(file_finder)
+      if file_finder.options.fetch(:files).empty?
+        file_finder.list(*options[:extensions])
+      else
+        file_finder.options.fetch(:files, [])
+      end
+    end
+
+    private
+
+    # Where are we looking for files?
+    # @return [String]
+    # @api private
+    attr_reader :path
+
+    # Options hash for all configurations
+    # @return [Hash]
+    # @api private
+    attr_reader :options
+
+    # Check requested files for problematic TODO comments
+    # @return exit code 0 for success, 1 for failure
+    # @api private
+    def lint_codebase
       finder = FileFinder.new(path, options)
       files = load_files(finder)
       files_count = files.count
@@ -52,29 +88,28 @@ module TodoLint
       end
     end
 
-    # Loads the files to be read
-    # @return [Array<String>]
-    # @example cli.load_files(file_finder)
-    # @api public
-    def load_files(file_finder)
-      if file_finder.options.fetch(:files).empty?
-        file_finder.list(*options[:extensions])
-      else
-        file_finder.options.fetch(:files, [])
+    # Print report of todos in codebase, then exit
+    #
+    # @return by exiting with 0
+    # @api private
+    def print_report
+      todos = []
+      finder = FileFinder.new(path, options)
+      files = load_files(finder)
+      files.each do |file|
+        todos += Todo.within(File.open(file))
       end
+      todos.sort.each.with_index do |todo, num|
+        due_date = if todo.due_date
+                     Rainbow(" (due #{todo.due_date.to_date})").blue
+                   else
+                     Rainbow(" (missing due date)").red
+                   end
+        puts "#{num + 1}. #{todo.task}#{due_date}"
+      end
+
+      exit 0
     end
-
-    private
-
-    # Where are we looking for files?
-    # @return [String]
-    # @api private
-    attr_reader :path
-
-    # Options hash for all configurations
-    # @return [Hash]
-    # @api private
-    attr_reader :options
 
     # Pluralize a word based on the count
     # @return [String]

@@ -4,8 +4,9 @@ module TodoLint
     # The regular expression that identifies todo comments
     PATTERN = /
     (?<flag> TODO ){0}
-    (?<due_date> \(\d{4}-\d{2}-\d{2}\) ){0}
-    \g<flag>\g<due_date>?
+    (?<due_date> \(\d{4}-\d{2}-\d{2}\)){0}
+    (?<task>.+){0}
+    \g<flag>\g<due_date>?: \g<task>
     /x
 
     # Search a file for all of the todo/fixme/etc comments within it
@@ -66,6 +67,17 @@ module TodoLint
       !match[:due_date].nil?
     end
 
+    # What is the actual task associated with this todo?
+    #
+    # @example
+    #   todo.task #=> "Wash the car"
+    #
+    # @return [String]
+    # @api public
+    def task
+      match[:task].lstrip
+    end
+
     # When this todo is due
     # @example
     #   due_todo.line #=> "# TODO(2015-05-24): go to the beach"
@@ -95,6 +107,31 @@ module TodoLint
     # @api public
     def character_number
       (line =~ PATTERN) + 1
+    end
+
+    # Which todo is due sooner?
+    #
+    # @example
+    #   [todo_one, todo_two].sort # this implicitly calls <=>
+    #
+    # @return [Fixnum]
+    # @api public
+    def <=>(other)
+      due_date_for_sorting <=> other.due_date_for_sorting
+    end
+
+    protected
+
+    # Helper for sorting todos
+    #
+    # @example
+    #   todo.due_date_for_sorting #=> #<Date: 2016-02-06>
+    #
+    # @return [Date]
+    # @api semipublic
+    def due_date_for_sorting
+      # Date.new is like the beginning of time
+      due_date ? due_date.to_date : Date.new
     end
 
     private

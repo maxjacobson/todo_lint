@@ -76,5 +76,20 @@ module TodoLint #:nodoc:
       expect(list_of_files).to_not include(app_coffee)
       expect(list_of_files).to_not include(app_js)
     end
+
+    it "should include :report when report requested with -r" do
+      options = Options.new.parse(["-r"])
+      expect(options[:report]).to be true
+    end
+
+    it "should include :report when report requested with --report" do
+      options = Options.new.parse(["--report"])
+      expect(options[:report]).to be true
+    end
+
+    it "should not include :report when report not requested" do
+      options = Options.new.parse([])
+      expect(options[:report]).to be false
+    end
   end
 end
