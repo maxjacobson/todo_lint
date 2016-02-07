@@ -7,7 +7,7 @@ module TodoLint #:nodoc:
     let(:file) { File.open(offensive_filename) }
     let(:path) { file.path }
 
-    def todo_with_line(line, line_number: rand(1000))
+    def todo_with_line(line, line_number: rand(1000), path: path)
       Todo.new(line, :path => path, :line_number => line_number)
     end
 
@@ -77,7 +77,13 @@ module TodoLint #:nodoc:
       end
     end
 
-    xdescribe "#relative_path"
+    describe "#relative_path" do
+      it "gives the path relative do the current directory" do
+        path = File.expand_path("./spec/spec_helper.rb")
+        todo = todo_with_line("# TODO: omg", path: path)
+        expect(todo.relative_path).to eq "spec/spec_helper.rb"
+      end
+    end
 
     describe "sorting" do
       context "when all of the todos have due dates" do
