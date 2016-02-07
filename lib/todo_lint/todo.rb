@@ -16,7 +16,9 @@ module TodoLint
     # @return [Array<Todo>]
     def self.within(file)
       file.each_line.with_index.map do |line, line_number|
-        new(line, :line_number => line_number + 1) if present_in?(line)
+        if present_in?(line)
+          new(line, :line_number => line_number + 1, :path => file.path)
+        end
       end.compact
     end
 
@@ -44,14 +46,25 @@ module TodoLint
     # @return [Fixnum]
     attr_reader :line_number
 
+    # The absolute path to the file where we found this todo
+    # @example
+    #   todo.path #=> "/Users/max/src/layabout/Gemfile"
+    #
+    # @api public
+    # @return [String]
+    attr_reader :path
+
     # A new Todo must know a few things
     # @example
     #   Todo.new("#TODO: get a boat", line_number: 4)
     # @api public
-    def initialize(line, line_number: RequiredArg.new(:line_number))
+    def initialize(line,
+                   line_number: RequiredArg.new(:line_number),
+                   path: RequiredArg.new(:path))
       absent_todo!(line) unless self.class.present_in?(line)
       @line = line
       @line_number = line_number
+      @path = path
     end
 
     # Was this todo annotated with a due date?
@@ -118,6 +131,18 @@ module TodoLint
     # @api public
     def <=>(other)
       due_date_for_sorting <=> other.due_date_for_sorting
+    end
+
+    # The relative path to the file where this todo was found
+    #
+    # @example
+    #   todo.relative #=> "spec/spec_helper.rb"
+    #
+    # @return [String]
+    # @api public
+    def relative_path
+      current_dir = Pathname.new(File.expand_path("./"))
+      Pathname.new(path).relative_path_from(current_dir).to_s
     end
 
     protected

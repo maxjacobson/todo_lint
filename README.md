@@ -47,6 +47,14 @@ to:
 
 Now your build will pass. Until November, 2043.
 
+### Alternative usage as todo_list generator
+
+If you'd like a summary of all of the todos, instead run:
+
+```
+bundle exec todo_lint --report
+```
+
 ## Configuration
 
 Create a .todo_lint.yml file in your main repo
@@ -71,6 +79,7 @@ Command flag              | Description
 `-c/--config [FILE]`      | Load the specified config file
 `-e/--exclude [FILES]`    | Exclude the specified files
 `-i/--include [EXTS]`     | Only look at specified extensions
+`-r/--report`             | Print a sorted todo list instead of linting
 
 ## Development
 

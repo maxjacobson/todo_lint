@@ -66,7 +66,6 @@ module TodoLint
       reports = files.map do |file|
         Todo.within(File.open(file)).map do |todo|
           reporter = Reporter.new(todo,
-                                  :path => file,
                                   :judge => Judge.new(todo))
           reporter.report.tap do |report|
             print Rainbow(".").public_send(report.nil? ? :green : :red)
@@ -101,11 +100,16 @@ module TodoLint
       end
       todos.sort.each.with_index do |todo, num|
         due_date = if todo.due_date
-                     Rainbow(" (due #{todo.due_date.to_date})").blue
+                     Rainbow(" (due #{todo.due_date.to_date})")
+                       .public_send(todo.due_date.overdue? ? :red : :blue)
                    else
-                     Rainbow(" (missing due date)").red
+                     Rainbow(" (no due date)").red
                    end
-        puts "#{num + 1}. #{todo.task}#{due_date}"
+        puts "#{num + 1}. #{todo.task}#{due_date} " +
+             Rainbow(
+               "(#{todo.relative_path}:#{todo.line_number}:" \
+               "#{todo.character_number})"
+             ).yellow
       end
 
       exit 0

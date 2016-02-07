@@ -5,12 +5,11 @@ module TodoLint
     # Accept a todo and a path to check for problems
     # @example
     #   Reporter.new(todo,
-    #     path: "/Users/max/src/required_arg/README.md",
     #     judge: Judge.new(todo))
     # @api public
-    def initialize(todo, path: RequiredArg.new, judge: RequiredArg.new)
+    def initialize(todo, judge: RequiredArg.new)
       @todo = todo
-      @path = path
+      @path = todo.path
       @judge = judge
     end
 
