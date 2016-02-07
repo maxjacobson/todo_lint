@@ -10,7 +10,12 @@ module TodoLint #:nodoc:
 
     it "cares if the due date annotation is in the past" do
       due_date = instance_spy(DueDate, :overdue? => true)
-      todo = instance_spy(Todo, :annotated? => true, :due_date => due_date)
+      todo = instance_spy(
+        Todo,
+        :annotated? => true,
+        :due_date => due_date,
+        :tag? => false
+      )
       judge = Judge.new(todo)
       expect(judge.charge).to eq "Overdue due date"
     end

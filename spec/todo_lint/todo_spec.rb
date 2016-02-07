@@ -6,14 +6,26 @@ module TodoLint #:nodoc:
     let(:offensive_filename) { File.join(examples, "with_unannotated_todo.js") }
     let(:file) { File.open(offensive_filename) }
     let(:path) { file.path }
+    let(:config) do
+      {
+        :tags => {
+          "#omg" => DueDate.new(Date.new(1988, 8, 29))
+        }
+      }
+    end
 
-    def todo_with_line(line, line_number: rand(1000), path: path)
-      Todo.new(line, :path => path, :line_number => line_number)
+    def todo_with_line(line, line_number: rand(1000), path: self.path)
+      Todo.new(
+        line,
+        :path => path,
+        :line_number => line_number,
+        :config => config
+      )
     end
 
     describe "::within" do
       it "returns a list of offenses" do
-        todos = Todo.within(file)
+        todos = Todo.within(file, :config => config)
         expect(todos.length).to eq 1
         todo = todos.first
         expect(todo).to be_a Todo
@@ -26,7 +38,7 @@ module TodoLint #:nodoc:
       let(:line) { "# TODO: get a good night's sleep" }
       context "with a todo comment and line number" do
         it "makes a todo" do
-          todo = Todo.new(line, :line_number => 47, :path => path)
+          todo = todo_with_line(line, :line_number => 47)
           expect(todo.line).to eq line
           expect(todo.line_number).to eq 47
         end
@@ -67,6 +79,27 @@ module TodoLint #:nodoc:
         end
       end
 
+      context "when the line is annotated with a tag" do
+        context "and the config is aware of the tag" do
+          it "should return true" do
+            todo = todo_with_line("# TODO(#omg): solve a crime")
+            expect(todo).to be_annotated
+            expect(todo.flag).to eq "TODO"
+            expect(todo.due_date).to be_a DueDate
+            expect(todo.due_date.to_date).to eq Date.new(1988, 8, 29)
+          end
+        end
+
+        context "and the config is *not* aware of the tag" do
+          it "should raise an error" do
+            todo = todo_with_line("# TODO(#shipit): solve a crime")
+            expect { todo.due_date }.to raise_error(
+              KeyError, "#shipit tag not defined in config file"
+            )
+          end
+        end
+      end
+
       context "when the line is not annotated with a date" do
         it "should return false" do
           todo = todo_with_line("# TODO: solve a crime")
@@ -80,7 +113,7 @@ module TodoLint #:nodoc:
     describe "#relative_path" do
       it "gives the path relative do the current directory" do
         path = File.expand_path("./spec/spec_helper.rb")
-        todo = todo_with_line("# TODO: omg", path: path)
+        todo = todo_with_line("# TODO: omg", :path => path)
         expect(todo.relative_path).to eq "spec/spec_helper.rb"
       end
     end

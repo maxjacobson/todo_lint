@@ -15,10 +15,30 @@ module TodoLint
     #   Judge.new(todo)
     # @api public
     def initialize(todo)
-      if todo.annotated?
-        @charge = "Overdue due date" if todo.due_date.overdue?
-      else
-        @charge = "Missing due date annotation"
+      @todo = todo
+      @charge = make_charge
+    end
+
+    private
+
+    # Which todo is being judged?
+    #
+    # @return [Todo]
+    # @api private
+    attr_reader :todo
+
+    # What is the problem with this todo?
+    #
+    # @return [String] if there's a problem
+    # @return [NilClass] if no charge needed
+    # @api private
+    def make_charge
+      if !todo.annotated?
+        "Missing due date annotation"
+      elsif todo.due_date.overdue? && todo.tag?
+        "Overdue due date #{todo.due_date.to_date} via tag"
+      elsif todo.due_date.overdue?
+        "Overdue due date"
       end
     end
   end

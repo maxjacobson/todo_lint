@@ -20,7 +20,7 @@ module TodoLint #:nodoc:
         expect do
           DueDate.from_annotation("omg")
         end.to raise_error(
-          ArgumentError, 'not a properly formatted annotation: "omg"')
+          ArgumentError, 'not a properly formatted date: "omg"')
       end
     end
 

@@ -5,8 +5,9 @@ module TodoLint
     PATTERN = /
     (?<flag> TODO ){0}
     (?<due_date> \(\d{4}-\d{2}-\d{2}\)){0}
+    (?<tag>\#\w+){0}
     (?<task>.+){0}
-    \g<flag>\g<due_date>?: \g<task>
+    \g<flag>(?:\g<due_date>|(?:\(\g<tag>\)))?: \g<task>
     /x
 
     # Search a file for all of the todo/fixme/etc comments within it
@@ -14,11 +15,15 @@ module TodoLint
     #   Todo.within(File.open("app.rb"))
     # @api public
     # @return [Array<Todo>]
-    def self.within(file)
+    def self.within(file, config: RequiredArg.new(:config))
       file.each_line.with_index.map do |line, line_number|
-        if present_in?(line)
-          new(line, :line_number => line_number + 1, :path => file.path)
-        end
+        next unless present_in?(line)
+        new(
+          line,
+          :line_number => line_number + 1,
+          :path => file.path,
+          :config => config
+        )
       end.compact
     end
 
@@ -60,11 +65,13 @@ module TodoLint
     # @api public
     def initialize(line,
                    line_number: RequiredArg.new(:line_number),
-                   path: RequiredArg.new(:path))
+                   path: RequiredArg.new(:path),
+                   config: RequiredArg.new(:config))
       absent_todo!(line) unless self.class.present_in?(line)
       @line = line
       @line_number = line_number
       @path = path
+      @config = config
     end
 
     # Was this todo annotated with a due date?
@@ -77,7 +84,7 @@ module TodoLint
     # @return [Boolean]
     # @api public
     def annotated?
-      !match[:due_date].nil?
+      !match[:due_date].nil? || !match[:tag].nil?
     end
 
     # What is the actual task associated with this todo?
@@ -101,7 +108,13 @@ module TodoLint
     # @return [NilClass] if there is no due date
     # @api public
     def due_date
-      DueDate.from_annotation(match[:due_date]) if annotated?
+      return unless annotated?
+      return @due_date if defined?(@due_date)
+      @due_date = if match[:due_date]
+                    DueDate.from_annotation(match[:due_date])
+                  elsif match[:tag]
+                    lookup_tag_due_date
+                  end
     end
 
     # What did the developer write to get our attention?
@@ -120,6 +133,29 @@ module TodoLint
     # @api public
     def character_number
       (line =~ PATTERN) + 1
+    end
+
+    # Was this todo using a tag (as opposed to a direct due date)?
+    #
+    # @example
+    #   todo.tag? #=> true
+    # @return [Boolean]
+    # @api public
+    def tag?
+      !match[:tag].nil?
+    end
+
+    # What tag does this todo use?
+    #
+    # @example
+    #   todo.tag #=> "#shipit"
+    #   todo.tag #=> nil
+    #
+    # @return [String] if the Todo has a tag
+    # @return [NilClass] if the Todo has no tag
+    # @api public
+    def tag
+      match[:tag]
     end
 
     # Which todo is due sooner?
@@ -161,6 +197,12 @@ module TodoLint
 
     private
 
+    # What is the configuration for this code base's todo_lint setup?
+    #
+    # @return [Hash]
+    # @api private
+    attr_reader :config
+
     # Analyze the line to help identify when the todo is due
     # @return [MatchData]
     # @api private
@@ -173,6 +215,17 @@ module TodoLint
     # @api private
     def absent_todo!(line)
       raise ArgumentError, "Not even a todo: #{line.inspect}"
+    end
+
+    # A tag was referenced, so let's see when that's due
+    # @return [DueDate]
+    # @raise [KeyError] if the tag does not reference a due date in the config
+    # @api private
+    def lookup_tag_due_date
+      config.fetch(:tags).fetch(match[:tag])
+    rescue KeyError
+      msg = "#{match[:tag]} tag not defined in config file"
+      raise KeyError, msg
     end
   end
 end

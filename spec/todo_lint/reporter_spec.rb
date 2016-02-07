@@ -9,7 +9,8 @@ module TodoLint #:nodoc:
         todo = Todo.new(
           "  # TODO: glimpse infinity",
           :line_number => 45,
-          :path => path
+          :path => path,
+          :config => {}
         )
         judge = instance_spy(Judge,
                              :charge => "Missing due date annotation")
@@ -26,7 +27,8 @@ module TodoLint #:nodoc:
       it "does not report on a todo with a silent judge" do
         todo = Todo.new("  # TODO(1994-05-11): follow your heart",
                         :line_number => 45,
-                        :path => path)
+                        :path => path,
+                        :config => {})
 
         judge = instance_spy(Judge, :charge => nil)
 

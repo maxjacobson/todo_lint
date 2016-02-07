@@ -18,3 +18,7 @@ Metrics/MethodLength:
   Exclude:
     - lib/todo_lint/cli.rb
     - lib/todo_lint/options.rb
+
+Metrics/ModuleLength:
+  Exclude:
+    - spec/**/*.rb

@@ -64,7 +64,7 @@ module TodoLint
       files = load_files(finder)
       files_count = files.count
       reports = files.map do |file|
-        Todo.within(File.open(file)).map do |todo|
+        Todo.within(File.open(file), :config => @options).map do |todo|
           reporter = Reporter.new(todo,
                                   :judge => Judge.new(todo))
           reporter.report.tap do |report|
@@ -96,11 +96,12 @@ module TodoLint
       finder = FileFinder.new(path, options)
       files = load_files(finder)
       files.each do |file|
-        todos += Todo.within(File.open(file))
+        todos += Todo.within(File.open(file), :config => @options)
       end
       todos.sort.each.with_index do |todo, num|
         due_date = if todo.due_date
-                     Rainbow(" (due #{todo.due_date.to_date})")
+                     tag_context = " via #{todo.tag}" if todo.tag?
+                     Rainbow(" (due #{todo.due_date.to_date}#{tag_context})")
                        .public_send(todo.due_date.overdue? ? :red : :blue)
                    else
                      Rainbow(" (no due date)").red
