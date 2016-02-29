@@ -50,7 +50,7 @@ module TodoLint
     # @return [Boolean]
     def excluded_file?(file)
       full_path = File.expand_path(file)
-      options.fetch(:excluded_files, []).any? do |file_to_exclude|
+      options.fetch(:excluded_files) { [] }.any? do |file_to_exclude|
         File.fnmatch(file_to_exclude, full_path)
       end
     end

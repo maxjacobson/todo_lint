@@ -8,3 +8,4 @@ script:
   - bundle exec rake form
   - bundle exec rake function
   - bundle exec rake clarity
+  - bundle exec fasterer

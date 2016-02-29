@@ -15,7 +15,7 @@ module TodoLint
         @options.merge!(ConfigFile.new.read_config_file("./.todo_lint.yml"))
       end
       @path = File.expand_path(".")
-      add_default_extensions unless @options.fetch(:files, []).any?
+      add_default_extensions unless @options.fetch(:files) { [] }.any?
     end
 
     # Perform the actions requested based on the options specified
@@ -40,7 +40,7 @@ module TodoLint
       if file_finder.options.fetch(:files).empty?
         file_finder.list(*options[:extensions])
       else
-        file_finder.options.fetch(:files, [])
+        file_finder.options.fetch(:files) { [] }
       end
     end
 
