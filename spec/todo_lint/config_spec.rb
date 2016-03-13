@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module TodoLint
-  describe ConfigFile do
+  RSpec.describe ConfigFile do
     let(:fake_project_path) { File.expand_path("../../fake_project", __FILE__) }
     let(:exclude_file_yaml) { File.join(fake_project_path, ".todo_lint_1.yml") }
     let(:extensions_yaml) { File.join(fake_project_path, ".todo_lint_2.yml") }

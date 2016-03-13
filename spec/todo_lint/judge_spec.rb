@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module TodoLint
-  describe Judge do
+  RSpec.describe Judge do
     it "cares if the todo is missing its due date annotation" do
       todo = instance_spy(Todo, :annotated? => false)
       judge = Judge.new(todo)

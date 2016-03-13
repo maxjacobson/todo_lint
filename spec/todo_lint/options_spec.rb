@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module TodoLint
-  describe Cli do
+  RSpec.describe Cli do
     let(:fake_project_path) { File.expand_path("../../fake_project", __FILE__) }
     let(:lib_path) { File.expand_path("../../../lib", __FILE__) }
     let(:app_rb) { File.join(fake_project_path, "app.rb") }

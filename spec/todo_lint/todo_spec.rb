@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module TodoLint
-  describe Todo do
+  RSpec.describe Todo do
     let(:examples) { File.expand_path("../../fake_example_files", __FILE__) }
     let(:offensive_filename) { File.join(examples, "with_unannotated_todo.js") }
     let(:file) { File.open(offensive_filename) }

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module TodoLint
-  describe Reporter do
+  RSpec.describe Reporter do
     let(:path) { "/Users/max/src/layabout/Gemfile" }
 
     describe "#to_s" do

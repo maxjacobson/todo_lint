@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module TodoLint
-  describe FileFinder do
+  RSpec.describe FileFinder do
     let(:fake_project_path) { File.expand_path("../../fake_project", __FILE__) }
     let(:app_js) { File.join(fake_project_path, "app.js") }
     let(:app_rb) { File.join(fake_project_path, "app.rb") }
