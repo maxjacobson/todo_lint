@@ -1,6 +1,6 @@
 require "spec_helper"
 
-module TodoLint #:nodoc:
+module TodoLint
   describe DueDate do
     before do
       Timecop.freeze(Time.local(1988, 8, 29))

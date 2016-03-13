@@ -1,6 +1,6 @@
 require "spec_helper"
 
-module TodoLint #:nodoc:
+module TodoLint
   describe Todo do
     let(:examples) { File.expand_path("../../fake_example_files", __FILE__) }
     let(:offensive_filename) { File.join(examples, "with_unannotated_todo.js") }

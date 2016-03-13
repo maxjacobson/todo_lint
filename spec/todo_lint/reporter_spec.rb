@@ -1,6 +1,6 @@
 require "spec_helper"
 
-module TodoLint #:nodoc:
+module TodoLint
   describe Reporter do
     let(:path) { "/Users/max/src/layabout/Gemfile" }
 

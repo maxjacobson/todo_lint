@@ -1,6 +1,6 @@
 require "spec_helper"
 
-module TodoLint #:nodoc:
+module TodoLint
   describe ConfigFile do
     let(:fake_project_path) { File.expand_path("../../fake_project", __FILE__) }
     let(:exclude_file_yaml) { File.join(fake_project_path, ".todo_lint_1.yml") }

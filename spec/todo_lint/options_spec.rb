@@ -1,6 +1,6 @@
 require "spec_helper"
 
-module TodoLint #:nodoc:
+module TodoLint
   describe Cli do
     let(:fake_project_path) { File.expand_path("../../fake_project", __FILE__) }
     let(:lib_path) { File.expand_path("../../../lib", __FILE__) }
