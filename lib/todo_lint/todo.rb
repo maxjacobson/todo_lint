@@ -34,7 +34,7 @@ module TodoLint
     # @return [Boolean]
     # @api public
     def self.present_in?(line)
-      line =~ PATTERN
+      line.match(PATTERN) != nil
     end
 
     # The content of the line of source code containing the todo comment
