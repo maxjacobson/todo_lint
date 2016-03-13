@@ -1,10 +1,12 @@
 require "bundler/gem_tasks"
-require "rspec/core/rake_task"
-require "rubocop/rake_task"
-require "yardstick/rake/verify"
+require "yaml"
 
-RSpec::Core::RakeTask.new(:function)
-RuboCop::RakeTask.new(:form)
-Yardstick::Rake::Verify.new(:clarity)
+task :continuous_integration do
+  YAML.load(File.read("./.travis.yml")).fetch("script").each do |cmd|
+    next if system cmd
+    puts "\nFailed: #{cmd.inspect}"
+    exit 1
+  end
+end
 
-task :default => [:function, :form, :clarity]
+task :default => [:continuous_integration]
