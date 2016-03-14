@@ -25,7 +25,7 @@ module TodoLint
       end
 
       it "does not report on a todo with a silent judge" do
-        todo = Todo.new("  # TODO(1994-05-11): follow your heart",
+        todo = Todo.new("  # TODO: follow your heart (1994-05-11)",
                         :line_number => 45,
                         :path => path,
                         :config => {})

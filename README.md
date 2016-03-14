@@ -42,7 +42,7 @@ Go through your TODO comments, and change from:
 to:
 
 ```ruby
-# TODO(2043-11-05): refactor into multiple classes
+# TODO: refactor into multiple classes (2043-11-05)
 ```
 
 Now your build will pass. Until November, 2043.

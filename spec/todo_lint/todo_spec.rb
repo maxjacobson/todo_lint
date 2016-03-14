@@ -71,7 +71,7 @@ module TodoLint
     describe "#annotated?, #flag, #due_date" do
       context "when the line is annotated with a due date" do
         it "should return true" do
-          todo = todo_with_line("# TODO(2015-08-29): solve a crime")
+          todo = todo_with_line("# TODO: solve a crime (2015-08-29)")
           expect(todo).to be_annotated
           expect(todo.flag).to eq "TODO"
           expect(todo.due_date).to be_a DueDate
@@ -82,7 +82,7 @@ module TodoLint
       context "when the line is annotated with a tag" do
         context "and the config is aware of the tag" do
           it "should return true" do
-            todo = todo_with_line("# TODO(#omg): solve a crime")
+            todo = todo_with_line("# TODO: solve a crime (#omg)")
             expect(todo).to be_annotated
             expect(todo.flag).to eq "TODO"
             expect(todo.due_date).to be_a DueDate
@@ -92,7 +92,7 @@ module TodoLint
 
         context "and the config is *not* aware of the tag" do
           it "should raise an error" do
-            todo = todo_with_line("# TODO(#shipit): solve a crime")
+            todo = todo_with_line("# TODO: solve a crime (#shipit)")
             expect { todo.due_date }.to raise_error(
               KeyError, "#shipit tag not defined in config file"
             )
@@ -122,8 +122,8 @@ module TodoLint
       context "when all of the todos have due dates" do
         it "sorts them with newer todos first" do
           todos = [
-            todo_with_line("# TODO(1969-04-04): commit a crime"),
-            todo_with_line("# TODO(1955-08-02): plan a crime")
+            todo_with_line("# TODO: commit a crime (1969-04-04)"),
+            todo_with_line("# TODO: plan a crime (1955-08-02)")
           ]
 
           expect(todos.sort.map(&:task)).to eq [
@@ -136,9 +136,9 @@ module TodoLint
       context "when some of the todos don't have due dates" do
         it "sorts the unannotated ones to the front" do
           todos = [
-            todo_with_line("# TODO(1969-04-04): commit a crime"),
+            todo_with_line("# TODO: commit a crime (1969-04-04)"),
             todo_with_line("# TODO: buy some spray paint"),
-            todo_with_line("# TODO(1955-08-02): plan a crime")
+            todo_with_line("# TODO: plan a crime (1955-08-02)")
           ]
 
           expect(todos.sort.map(&:task)).to eq [

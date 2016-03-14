@@ -6,8 +6,8 @@ module TodoLint
     (?<flag> TODO ){0}
     (?<due_date> \(\d{4}-\d{2}-\d{2}\)){0}
     (?<tag>\#\w+){0}
-    (?<task>.+){0}
-    \g<flag>(?:\g<due_date>|(?:\(\g<tag>\)))?: \g<task>
+    (?<task>.+?){0}
+    \g<flag>: \g<task>(?:\g<due_date>|(?:\(\g<tag>\)))?
     /x
 
     # Search a file for all of the todo/fixme/etc comments within it
